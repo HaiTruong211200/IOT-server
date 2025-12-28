@@ -11,9 +11,22 @@ class SensorData(BaseModel):
 
 # ===== GET API =====
 @app.get("/get")
-def get_data(temp: float = Query(...), hum: float = Query(...)):
-    print(f"[GET] Temp={temp} | Hum={hum}")
-    return {"status": "success", "method": "GET", "temp": temp, "hum": hum}
+def get_data(
+    temp: float = Query(...), 
+    hum: float = Query(...), 
+    motion: int = Query(...) # Thêm tham số motion bắt buộc
+):
+    # In ra console để kiểm tra
+    print(f"[GET] Temp={temp} | Hum={hum} | Motion={motion}")
+    
+    # Trả về JSON có cả motion
+    return {
+        "status": "success", 
+        "method": "GET", 
+        "temp": temp, 
+        "hum": hum, 
+        "motion": motion
+    }
 
 # ===== POST API =====
 @app.post("/post")
