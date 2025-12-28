@@ -9,6 +9,10 @@ class SensorData(BaseModel):
     temp: float
     hum: float
 
+@app.get("/")
+def home():
+    return {"message": "Server IoT dang hoat dong!", "status": "ok"}
+
 # ===== GET API =====
 @app.get("/get")
 def get_data(
