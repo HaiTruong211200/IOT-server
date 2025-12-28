@@ -12,22 +12,32 @@ class SensorData(BaseModel):
 # ===== GET API =====
 @app.get("/get")
 def get_data(
-    temp: float = Query(...), 
-    hum: float = Query(...), 
-    motion: int = Query(...) # Thêm tham số motion bắt buộc
+    response: Response,  # Đối tượng để can thiệp vào HTTP Header
+    temp: float = Query(None), 
+    hum: float = Query(None), 
+    motion: int = Query(0)
 ):
-    # In ra console để kiểm tra
+    # Kiểm tra dữ liệu đầu vào (Validation thủ công)
+    if temp is None or hum is None:
+        # Nếu thiếu dữ liệu, set HTTP Code thành 400 (Bad Request)
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "http_code": 400,
+            "status": "error",
+            "message": "Thieu tham so temp hoac hum"
+        }
+
+    # Nếu thành công
     print(f"[GET] Temp={temp} | Hum={hum} | Motion={motion}")
+    response.status_code = status.HTTP_200_OK # Set header thực tế
     
-    # Trả về JSON có cả motion
     return {
+        "http_code": 200,          # Trả về code trong JSON để tiện check
         "status": "success", 
-        "method": "GET", 
         "temp": temp, 
         "hum": hum, 
         "motion": motion
     }
-
 # ===== POST API =====
 @app.post("/post")
 async def post_data(
